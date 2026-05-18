@@ -1,4 +1,4 @@
-package de.db.webapp.presentation.controller;
+package de.db.webapp.presentation.controller.v1;
 
 
 import de.db.webapp.presentation.dto.PersonDto;
@@ -8,19 +8,17 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
-import jakarta.ws.rs.Path;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/personen")  // Name der resource
+@RequestMapping("/v1/personen")  // Name der resource
 public class PersonenController {
 
     @Operation(summary = "Liefert eine Person")
@@ -73,7 +71,7 @@ public class PersonenController {
     @PostMapping(path = "", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Void> createPerson(@Valid @RequestBody PersonDto personDto,  UriComponentsBuilder uriBuilder) {
         System.out.println("Creating person");
-        UriComponents uriComponents = uriBuilder.path("/personen/{id}").buildAndExpand(personDto.getId());
+        UriComponents uriComponents = uriBuilder.path("/v1/personen/{id}").buildAndExpand(personDto.getId());
         return ResponseEntity.created(uriComponents.toUri()).build();
     }
 
