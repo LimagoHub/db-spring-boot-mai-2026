@@ -6,9 +6,9 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 @Component
-//@Qualifier("lower")
+@Qualifier("lower")
 //@Primary
-@Profile("production")
+//@Profile("production")
 public class ToLowerTranslator implements Translator {
     @Override
     public String translate(final String text) {

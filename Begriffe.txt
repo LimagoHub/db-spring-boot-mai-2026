@@ -32,3 +32,8 @@ Konflikte aufloesen
 	
 @ConfigurationProperties(prefix = "mail")
 @PropertySource(value= "classpath:mail.yml",  factory = YamlPropertySourceFactory.class)
+
+Links:
+
+https://learn.microsoft.com/en-us/azure/architecture/best-practices/api-design
+https://restfulapi.net/resource-naming/
