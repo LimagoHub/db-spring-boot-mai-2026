@@ -1,6 +1,8 @@
 package de.db.webapp.domain.internal;
 
 
+import de.db.webapp.domain.AlreadyExistsException;
+import de.db.webapp.domain.NotFoundException;
 import de.db.webapp.domain.PersonenService;
 import de.db.webapp.domain.PersonenServiceException;
 import de.db.webapp.domain.mapper.PersonMapper;
@@ -38,36 +40,36 @@ public class PersonenServiceImpl implements PersonenService {
              */
 
     @Override
-    public boolean speichern(final Person person) throws PersonenServiceException {
-        try {
+    public void speichern(final Person person) throws PersonenServiceException {
+
             if(person == null) throw new PersonenServiceException("Parameter darf nicht null sein");
-            if(personenRepository.existsById(person.getId())) return false;
+            if(personenRepository.existsById(person.getId())) throw new AlreadyExistsException("Datensatz existiert bereits") ;
             if(person.getVorname() == null || person.getVorname().length() < 2) throw new PersonenServiceException("Vorname zu kurz");
             if(person.getNachname() == null || person.getNachname().length() < 2) throw new PersonenServiceException("Nachname zu kurz");
 
             if(person.getVorname().equalsIgnoreCase("Attila")) throw new PersonenServiceException("Attila will ich nicht");
-
+        try {
             personenRepository.save(personMapper.convert(person));
 
-            return true;
+
         } catch (RuntimeException e) {
             throw new PersonenServiceException("Upps", e);
         }
     }
 
     @Override
-    public boolean aendern(final Person person) throws PersonenServiceException {
-        try {
+    public void aendern(final Person person) throws PersonenServiceException {
+
             if(person == null) throw new PersonenServiceException("Parameter darf nicht null sein");
-            if(! personenRepository.existsById(person.getId())) return false;
+            if(! personenRepository.existsById(person.getId())) throw new NotFoundException("Datensatz nicht gefunden");
             if(person.getVorname() == null || person.getVorname().length() < 2) throw new PersonenServiceException("Vorname zu kurz");
             if(person.getNachname() == null || person.getNachname().length() < 2) throw new PersonenServiceException("Nachname zu kurz");
 
             if(person.getVorname().equalsIgnoreCase("Attila")) throw new PersonenServiceException("Attila will ich nicht");
+            try {
+                 personenRepository.save(personMapper.convert(person));
 
-            personenRepository.save(personMapper.convert(person));
 
-            return true;
         } catch (RuntimeException e) {
             throw new PersonenServiceException("Upps", e);
         }
@@ -94,11 +96,12 @@ public class PersonenServiceImpl implements PersonenService {
     }
 
     @Override
-    public boolean loesche(final UUID id) throws PersonenServiceException {
+    public void loesche(final UUID id) throws PersonenServiceException {
+
+        if(! personenRepository.existsById(id)) throw new NotFoundException("Datensatz nicht gefunden");
         try {
-            if(! personenRepository.existsById(id)) return false;
             personenRepository.deleteById(id);
-            return true;
+
         }  catch (RuntimeException e) {
             throw new PersonenServiceException("Upps", e);
         }

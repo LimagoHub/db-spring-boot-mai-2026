@@ -4,6 +4,7 @@ package de.db.webapp.presentation.controller.v1;
 import de.db.webapp.domain.PersonenService;
 import de.db.webapp.domain.PersonenServiceException;
 import de.db.webapp.presentation.dto.PersonDto;
+import de.db.webapp.presentation.errorhandler.IdMismatchException;
 import de.db.webapp.presentation.mapper.PersonDtoMapper;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -62,30 +63,31 @@ public class PersonenController {
 
     @DeleteMapping(path = "/{id}")
     public ResponseEntity<Void> deletePerson(@PathVariable UUID id) throws PersonenServiceException{
-        if(personenService.loesche(id))
-            return ResponseEntity.ok().build();
-        return ResponseEntity.notFound().build();
+        personenService.loesche(id);
+        return ResponseEntity.ok().build();
+
     }
 
     @PostMapping(path = "", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Void> createPerson(@Valid @RequestBody PersonDto personDto,  UriComponentsBuilder uriBuilder)throws PersonenServiceException {
 
-        if(personenService.speichern(personDtoMapper.convert(personDto))){
-            UriComponents uriComponents = uriBuilder.path("/v1/personen/{id}").buildAndExpand(personDto.getId());
-            return ResponseEntity.created(uriComponents.toUri()).build();
-        }
-        return ResponseEntity.status(HttpStatus.CONFLICT).build();
-        //return ResponseEntity.ok().build();
+        personenService.speichern(personDtoMapper.convert(personDto));
+        UriComponents uriComponents = uriBuilder.path("/v1/personen/{id}").buildAndExpand(personDto.getId());
+        return ResponseEntity.created(uriComponents.toUri()).build();
+
 
     }
 
     @PutMapping(path="{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Void> updatePerson(@PathVariable UUID id,@Valid @RequestBody PersonDto personDto)  throws PersonenServiceException{
-        if(personenService.aendern(personDtoMapper.convert(personDto))){
 
-            return ResponseEntity.ok().build();
+        if(! id.equals(personDto.getId())) {
+            throw new IdMismatchException("The ID in the URL path does not match the ID in the request body.");
         }
-        return ResponseEntity.notFound().build();
+
+        personenService.aendern(personDtoMapper.convert(personDto));
+
+        return ResponseEntity.ok().build();
 
     }
 }
