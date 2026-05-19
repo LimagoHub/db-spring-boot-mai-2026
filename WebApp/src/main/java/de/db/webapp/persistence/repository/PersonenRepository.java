@@ -1,6 +1,7 @@
 package de.db.webapp.persistence.repository;
 
 import de.db.webapp.persistence.entity.PersonEntity;
+import de.db.webapp.persistence.entity.TinyPerson;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 
@@ -18,4 +19,9 @@ public interface PersonenRepository extends CrudRepository<PersonEntity, UUID> {
 
     @Query("select p.id, p.nachname from PersonEntity p")
     Iterable<Object[]> projektion();
+
+    @Query("select new de.db.webapp.persistence.entity.TinyPerson(p.id, p.nachname) from PersonEntity p")
+    Iterable<TinyPerson> findTinies();
+
+    Iterable<TinyPerson> findAllProjectBy();
 }

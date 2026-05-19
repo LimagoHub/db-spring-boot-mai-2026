@@ -19,6 +19,6 @@ public class Demo {
     @PostConstruct
     public void post() {
 
-        personenRepository.franz("John").forEach(System.out::println);
+        personenRepository.findAllProjectBy().forEach(System.out::println);
     }
 }
