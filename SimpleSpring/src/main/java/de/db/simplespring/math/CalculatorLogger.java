@@ -2,6 +2,7 @@ package de.db.simplespring.math;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import java.lang.annotation.Retention;
@@ -9,6 +10,7 @@ import java.lang.annotation.RetentionPolicy;
 
 @Component
 @Qualifier("logger")
+
 @RequiredArgsConstructor
 public class CalculatorLogger implements Calculator{
 

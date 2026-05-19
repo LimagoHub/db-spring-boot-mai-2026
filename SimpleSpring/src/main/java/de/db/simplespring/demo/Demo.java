@@ -27,11 +27,15 @@ public class Demo {
 
     @Value("${Demo.gruss}")
     private final String message;
+    //@Qualifier("upper")
+
+
     @Qualifier("upper")
     private final Translator translator;
 
 
-    /*public Demo( final Translator translator, @Value("${Demo.gruss}") String message) {
+
+   /*public Demo( final Translator translator, @Value("${Demo.gruss}") String message) {
         this.message = message;
         this.translator = translator;
         System.out.println(message);

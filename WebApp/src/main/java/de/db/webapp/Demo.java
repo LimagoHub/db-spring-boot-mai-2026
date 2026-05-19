@@ -18,8 +18,7 @@ public class Demo {
 
     @PostConstruct
     public void post() {
-        PersonEntity person = PersonEntity.builder().id(UUID.randomUUID()).vorname("John").nachname("Doe").build();
 
-        personenRepository.save(person);
+        personenRepository.franz("John").forEach(System.out::println);
     }
 }
