@@ -1,5 +1,6 @@
 package de.db.webapp.presentation.controller.v1;
 
+import de.db.webapp.domain.NotFoundException;
 import de.db.webapp.domain.PersonenService;
 import de.db.webapp.domain.PersonenServiceException;
 import de.db.webapp.domain.model.Person;
@@ -106,5 +107,21 @@ class PersonenControllerTest {
         assertEquals(3, entity.getBody().size());
         verify(personenServiceMock, times(1)).findeAlle();
     }
+
+    @Test
+    void test6() throws PersonenServiceException {
+        doThrow(NotFoundException.class).when(personenServiceMock).loesche(any());
+        var entity = restTemplate.exchange("/v1/personen/b2e24e74-8686-43ea-baff-d9396b4202e0", HttpMethod.DELETE, null, Void.class);
+        assertEquals(HttpStatus.NOT_FOUND, entity.getStatusCode());
+    }
+
+    @Test
+    void test7() throws PersonenServiceException {
+
+        var entity = restTemplate.exchange("/v1/personen/b2e24e74-8686-43ea-baff-d9396b4202e0", HttpMethod.DELETE, null, Void.class);
+        assertEquals(HttpStatus.OK, entity.getStatusCode());
+        verify(personenServiceMock, times(1)).loesche(UUID.fromString("b2e24e74-8686-43ea-baff-d9396b4202e0"));
+    }
+
 
 }
