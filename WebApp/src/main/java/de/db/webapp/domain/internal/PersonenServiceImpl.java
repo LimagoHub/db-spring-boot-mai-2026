@@ -1,29 +1,31 @@
 package de.db.webapp.domain.internal;
 
 
-import de.db.webapp.domain.AlreadyExistsException;
-import de.db.webapp.domain.NotFoundException;
-import de.db.webapp.domain.PersonenService;
-import de.db.webapp.domain.PersonenServiceException;
+import de.db.webapp.domain.*;
 import de.db.webapp.domain.mapper.PersonMapper;
 import de.db.webapp.domain.model.Person;
 import de.db.webapp.persistence.repository.PersonenRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-@Service
+//@Service
 @RequiredArgsConstructor
 @Transactional(rollbackFor = PersonenServiceException.class, propagation = Propagation.REQUIRES_NEW, isolation = Isolation.READ_COMMITTED)
 public class PersonenServiceImpl implements PersonenService {
 
     private final PersonenRepository personenRepository;
     private final PersonMapper personMapper;
+    //private final BlacklistService blacklistService;
+    @Qualifier("antipathen")
+    private final List<String> antipathen;
 
 
      /*
@@ -47,15 +49,16 @@ public class PersonenServiceImpl implements PersonenService {
             if(person.getVorname() == null || person.getVorname().length() < 2) throw new PersonenServiceException("Vorname zu kurz");
             if(person.getNachname() == null || person.getNachname().length() < 2) throw new PersonenServiceException("Nachname zu kurz");
 
-            if(person.getVorname().equalsIgnoreCase("Attila")) throw new PersonenServiceException("Attila will ich nicht");
-        try {
-            personenRepository.save(personMapper.convert(person));
+            checkBusinessRules(person);
+            try {
+                personenRepository.save(personMapper.convert(person));
 
 
-        } catch (RuntimeException e) {
-            throw new PersonenServiceException("Upps", e);
-        }
+            } catch (RuntimeException e) {
+                throw new PersonenServiceException("Upps", e);
+            }
     }
+
 
     @Override
     public void aendern(final Person person) throws PersonenServiceException {
@@ -65,15 +68,15 @@ public class PersonenServiceImpl implements PersonenService {
             if(person.getVorname() == null || person.getVorname().length() < 2) throw new PersonenServiceException("Vorname zu kurz");
             if(person.getNachname() == null || person.getNachname().length() < 2) throw new PersonenServiceException("Nachname zu kurz");
 
-            if(person.getVorname().equalsIgnoreCase("Attila")) throw new PersonenServiceException("Attila will ich nicht");
+            checkBusinessRules(person);
             try {
-                 personenRepository.save(personMapper.convert(person));
+                     personenRepository.save(personMapper.convert(person));
 
 
-        } catch (RuntimeException e) {
-            throw new PersonenServiceException("Upps", e);
+            } catch (RuntimeException e) {
+                throw new PersonenServiceException("Upps", e);
+            }
         }
-    }
 
     @Transactional(readOnly = true)
     @Override
@@ -108,6 +111,9 @@ public class PersonenServiceImpl implements PersonenService {
     }
 
 
+    private void checkBusinessRules(final Person person) {
+        if(antipathen.contains(person.getVorname())) throw new PersonIsBlacklistedException("Unerwuenschte Person");
+    }
 
 
 }
