@@ -14,6 +14,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -47,6 +48,7 @@ public class SchweineQueryController {
     public ResponseEntity<Iterable<SchweinDto>> getSchweine(
          @RequestParam(required = false, defaultValue = "0") Integer mindestGewicht
     ) {
+
         return ResponseEntity.ok(mapper.convert(schweineService.findeAlle(mindestGewicht)));
     }
 

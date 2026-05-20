@@ -7,6 +7,7 @@ import de.db.webapp.presentation.errorhandler.IdMismatchException;
 import de.db.webapp.presentation.mapper.SchweinDtoMapper;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -51,5 +52,10 @@ public class SchweineCommandController {
 
     }
 
-  
+    @PostMapping(path = "/{id}/fuetterungen")
+    public ResponseEntity<Void> fuettern (@PathVariable UUID id ) {
+        schweineService.fuettern(id);
+
+        return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
 }

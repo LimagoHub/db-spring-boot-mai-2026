@@ -87,6 +87,13 @@ public class SchweineServiceImpl implements SchweineService {
     }
 
 
+    @Override
+    public void fuettern(final UUID id)  {
+        var schwein = findeNachId(id).orElseThrow(() -> new NotFoundException("Schwein existiert nicht"));
+        schwein.fuettern();
+        aendern(schwein);
+
+    }
 
     // Hilfsmethode zur Kapselung des Mappings und Speicherns
     private void persist(Schwein schwein) {
