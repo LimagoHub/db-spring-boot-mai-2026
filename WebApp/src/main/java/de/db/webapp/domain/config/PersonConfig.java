@@ -1,14 +1,13 @@
-package de.db.webapp.domain;
+package de.db.webapp.domain.config;
 
 
+import de.db.webapp.domain.PersonenService;
 import de.db.webapp.domain.internal.PersonenServiceImpl;
 import de.db.webapp.domain.mapper.PersonMapper;
-import de.db.webapp.domain.model.Person;
 import de.db.webapp.persistence.repository.PersonenRepository;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 
