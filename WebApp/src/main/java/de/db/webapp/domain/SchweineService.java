@@ -13,5 +13,5 @@ public interface SchweineService {
     Optional<Schwein> findeNachId(UUID id) ;
     Iterable<Schwein> findeAlle(Integer mindestGewicht) ;
     void loesche(UUID id) ;
-    void fuettern(UUID id) ;
+
 }

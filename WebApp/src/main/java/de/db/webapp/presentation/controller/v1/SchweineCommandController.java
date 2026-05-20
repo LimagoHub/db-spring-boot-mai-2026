@@ -51,10 +51,5 @@ public class SchweineCommandController {
 
     }
 
-    @PostMapping(path = "/{id}/fuetterungen")
-    public ResponseEntity<Void> fuettern (@PathVariable UUID id, UriComponentsBuilder uriBuilder ) {
-        schweineService.fuettern(id);
-        UriComponents uriComponents = uriBuilder.path("/v1/schweine/{id}").buildAndExpand(id);
-        return ResponseEntity.created(uriComponents.toUri()).build();
-    }
+  
 }
