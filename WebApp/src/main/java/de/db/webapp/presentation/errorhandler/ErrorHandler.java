@@ -3,6 +3,7 @@ package de.db.webapp.presentation.errorhandler;
 import de.db.webapp.domain.AlreadyExistsException;
 import de.db.webapp.domain.NotFoundException;
 import de.db.webapp.domain.PersonenServiceException;
+import de.db.webapp.domain.SchweineServiceException;
 import org.jspecify.annotations.Nullable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -51,6 +52,16 @@ public class ErrorHandler extends ResponseEntityExceptionHandler {
         }
 
 
+        return ResponseEntity.internalServerError().body(body);
+    }
+
+    @ExceptionHandler(SchweineServiceException.class)
+    public @Nullable ResponseEntity<Object> handleSchweineServiceException(SchweineServiceException ex, WebRequest request) {
+        Map<String, Object> body = new HashMap<>();
+
+        body.put("message", ex.getMessage());
+        body.put("type", ex.getClass().getSimpleName());// Achtung sicherheitsluecke
+        logger.error("Upps", ex);
         return ResponseEntity.internalServerError().body(body);
     }
 
